@@ -25,7 +25,6 @@ and<br>
 `((Mand!J)OR(J^P)) .P`
 
 # Todos and bugs
-- gui resize
 - `A xor not B` fix (`A xor (not B)` works tho)
 - add `nor` gate
 - add `nand` gate

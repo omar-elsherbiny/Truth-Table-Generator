@@ -13,7 +13,7 @@ textinput = pygame_textinput.TextInputVisualizer(
     cursor_color=(200, 200, 200)
 )
 
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
 CLOCK = pygame.time.Clock()
 
 vars = ['A']
@@ -53,6 +53,10 @@ while True:
     for event in events:
         if event.type == pygame.QUIT:
             exit()
+        if event.type == pygame.VIDEORESIZE:
+            SCREEN_HEIGHT = event.h
+            SCREEN_WIDTH = event.w
+            SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
         if event.type == pygame.KEYDOWN:
             # update
             #TODO: xor not problem
