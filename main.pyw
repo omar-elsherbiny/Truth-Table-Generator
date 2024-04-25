@@ -42,9 +42,8 @@ def eval_exp(inps):
         rexp = rexp.replace(vars[i], inps[i])
     try:
         return str(int(bool(eval(rexp))))
-    except (NameError, SyntaxError):
+    except (NameError, SyntaxError,TypeError):
         return '_'
-
 
 while True:
     events = pygame.event.get()
@@ -78,7 +77,8 @@ while True:
                 rep('  ', ' ')
 
             # get nvars
-            vars = sorted(list(set([c for c in exp if c.isupper()])))
+            seen = set()
+            vars = [c for c in exp if c.isupper() and not (c in seen or seen.add(c))]
             nvars = len(vars)
             if nvars == 0:
                 nvars = 1
