@@ -1,10 +1,21 @@
 import pygame_textinput
 import pygame
+
+#relative path
+import sys,os
+def resource_path(relative_path):
+    """Get absolute path to resource for PyInstaller"""
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath('.')
+    return os.path.join(base_path,relative_path)
+
 pygame.init()
 
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 500
-FONT = pygame.font.Font("Miracode.ttf", 18)  # freesansbold.ttf
+FONT = pygame.font.Font(resource_path("Miracode.ttf"), 18)  # freesansbold.ttf
 
 textinput = pygame_textinput.TextInputVisualizer(
     font_object=FONT,
@@ -21,6 +32,10 @@ exp = ''
 nvars = 1
 res = ['0']*(2**nvars)
 isvalid = False
+bksphold = False
+larrhold = False
+rarrhold = False
+holdbuff = 1
 
 
 def draw_text(text, x, y, color=(240, 240, 240)):
@@ -56,16 +71,37 @@ def find_all(st, sub):
 while True:
     events = pygame.event.get()
 
+    if bksphold or larrhold or rarrhold:
+        textinput.cursor_blink_interval = 116
+        if holdbuff%7==0:
+            if bksphold:
+                textinput.value = textinput.value[:-1]
+            if larrhold:
+                textinput.manager.cursor_pos -= 1 if textinput.manager.cursor_pos>0 else 0
+            if rarrhold:
+                textinput.manager.cursor_pos += 1 if textinput.manager.cursor_pos<len(textinput.value) else 0
+        holdbuff+=1
+
     textinput.update(events)
 
     for event in events:
         if event.type == pygame.QUIT:
-            exit()
+            pygame.quit()
+            sys.exit()
         if event.type == pygame.VIDEORESIZE:
             SCREEN_HEIGHT = event.h
             SCREEN_WIDTH = event.w
             SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_BACKSPACE: bksphold = False
+            if event.key == pygame.K_LEFT: larrhold = False
+            if event.key == pygame.K_RIGHT: rarrhold = False
+            textinput.cursor_blink_interval = 500
+            holdbuff = 1
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE: bksphold = True
+            if event.key == pygame.K_LEFT: larrhold = True
+            if event.key == pygame.K_RIGHT: rarrhold = True
             # update
             exp = textinput.value
             rep('NOR','nor')
@@ -196,4 +232,4 @@ while True:
 
     CLOCK.tick(30)
     pygame.display.update()
-    pygame.display.set_caption('Truth Table Generator | ' + str(round(CLOCK.get_fps(), 1)))
+    pygame.display.set_caption('Truth Table Generator | ') # + str(round(CLOCK.get_fps(), 1))
