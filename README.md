@@ -14,6 +14,8 @@ I added a compiled version for easy setup :)
 
 - logic operators can be capital or small
 
+- variables are ordered alphabetically in grid
+
 `not` / `!` : "!A"<br>
 `and` / `.` : "A.B" ("AB" does not work)<br>
 `or` / `+` : "A+B"<br>

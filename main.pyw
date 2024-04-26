@@ -201,8 +201,9 @@ while True:
                 rep('  ', ' ')
 
             # get nvars
-            seen = set()
-            vars = [c for c in exp if c.isupper() and not (c in seen or seen.add(c))]
+            #seen = set()
+            #vars = [c for c in exp if c.isupper() and not (c in seen or seen.add(c))] #as appearing
+            vars = sorted(list(set([c for c in exp if c.isupper()]))) # sorted
             nvars = len(vars)
             if nvars == 0:
                 nvars = 1
