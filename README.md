@@ -12,19 +12,22 @@ Generates truth table for a given boolean expression dynamically
 
 - logic operators can be capital or small
 
-`not`/`!`: "!A"
-`and`/`.`: "A.B" ("AB" does not work)
-`or`/`+`: "A+B"
-`xor`/`^`: "A^B"
+`not`/`!` : "!A"<br>
+`and`/`.` : "A.B" ("AB" does not work)<br>
+`or`/ `+` : "A+B"<br>
+`xor`/`^` : "A^B", "A xor (not B)"<br>
+`nor` : "(A)nor(B)"<br>
+`nand` : (A)nand(B)"<br>
+
+*brackets on operands are required in `nor`, `nand` and with `xor` if it has a `not` operand
 
 # Examples
 `((A and not B) or (B xor C)) and C`<br>
 is the same as<br>
 `((A.!B)+(B^C)).C`<br>
 and<br>
-`((Mand!J)OR(J^P)) .P`
+`((Mand!J)OR(J^P)) .P`<br><br>
+`((A + B) nand ((C) nor (D)))`
 
 # Todos and bugs
-- `A xor not B` fix (`A xor (not B)` works tho)
-- add `nor` gate
-- add `nand` gate
+- none till now :>

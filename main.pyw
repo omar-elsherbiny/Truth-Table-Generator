@@ -33,17 +33,25 @@ def rep(old, new):
     exp = exp.replace(old, new)
 
 
-def eval_exp(inps):
-    rexp = exp
+def eval_exp(inputs,expression):
+    rexp = expression
     for i in range(len(rexp) - 1):
         if rexp[i].isupper() and rexp[i + 1].isupper():
             return '_'
-    for i in range(len(inps)):
-        rexp = rexp.replace(vars[i], inps[i])
+    for i in range(len(inputs)):
+        rexp = rexp.replace(vars[i], inputs[i])
     try:
         return str(int(bool(eval(rexp))))
     except (NameError, SyntaxError,TypeError):
         return '_'
+
+def find_all(st, sub):
+    start = 0
+    while True:
+        start = st.find(sub, start)
+        if start == -1: return
+        yield start
+        start += len(sub) #+=1 for overlapping
 
 while True:
     events = pygame.event.get()
@@ -59,10 +67,12 @@ while True:
             SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
         if event.type == pygame.KEYDOWN:
             # update
-            #TODO: xor not problem
-            #TODO: A nor B
-            #TODO: A nand B
             exp = textinput.value
+            rep('NOR','nor')
+            rep('nor', '$$$')
+            rep('NAND','nand')
+            rep('nand', '&&&')
+
             rep('NOT', 'not')
             rep('AND', 'and')
             rep('XOR', 'xor')
@@ -77,6 +87,62 @@ while True:
             rep('and', ' and ')
             rep('or', ' or ')
 
+            for ind in list(find_all(exp,'$$$')):
+                brA = 0
+                flagA = False
+                operAr = ind
+                operAl = ind-1
+                while operAl>=0 and (not flagA or brA != 0):
+                    if exp[operAl] == ')': 
+                        brA += 1
+                        flagA = True
+                    elif exp[operAl] == '(': 
+                        brA -= 1
+                    operAl-=1
+                operAl+=1
+
+                brB = 0
+                flagB = False
+                operBl = ind + 3
+                operBr = ind + 3
+                while operBr<len(exp) and (not flagB or brB != 0):
+                    if exp[operBr]=='(':
+                        flagB = True
+                        brB += 1
+                    elif exp[operBr]==')':
+                        brB -= 1
+                    operBr+=1
+                if brA != 0 or flagA == False or brB != 0 or flagB == False: break
+                rep(exp[operAl:operBr],f"(not ({exp[operAl:operAr]} or {exp[operBl:operBr]}))")
+
+            for ind in list(find_all(exp,'&&&')):
+                brA = 0
+                flagA = False
+                operAr = ind
+                operAl = ind-1
+                while operAl>=0 and (not flagA or brA != 0):
+                    if exp[operAl] == ')': 
+                        brA += 1
+                        flagA = True
+                    elif exp[operAl] == '(': 
+                        brA -= 1
+                    operAl-=1
+                operAl+=1
+
+                brB = 0
+                flagB = False
+                operBl = ind + 3
+                operBr = ind + 3
+                while operBr<len(exp) and (not flagB or brB != 0):
+                    if exp[operBr]=='(':
+                        flagB = True
+                        brB += 1
+                    elif exp[operBr]==')':
+                        brB -= 1
+                    operBr+=1
+                if brA != 0 or flagA == False or brB != 0 or flagB == False: break
+                rep(exp[operAl:operBr],f"(not ({exp[operAl:operAr]} and {exp[operBl:operBr]}))")
+
             while '  ' in exp:
                 rep('  ', ' ')
 
@@ -87,13 +153,13 @@ while True:
             if nvars == 0:
                 nvars = 1
                 vars = ['A']
-
+            
             # get res
-            res = ['0']*(2**nvars)
+            res = ['_']*(2**nvars)
             isvalid = True
             for i in range(2**nvars):
                 lst = list(format(i, f"0{nvars}b"))
-                res[i] = str(eval_exp(lst))
+                res[i] = str(eval_exp(lst,exp))
                 if res[i] == '_': isvalid = False
 
             print(f"{exp=} {vars=} {isvalid=}")
