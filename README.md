@@ -1,6 +1,8 @@
 # Truth-Table-Generator
 Generates truth table for a given boolean expression dynamically
 
+I added a compiled version for easy setup :)
+
 # Usage
 - Captial letters act as variables
 
