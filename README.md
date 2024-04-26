@@ -12,10 +12,10 @@ Generates truth table for a given boolean expression dynamically
 
 - logic operators can be capital or small
 
-`not`/`!` : "!A"<br>
-`and`/`.` : "A.B" ("AB" does not work)<br>
-`or`/ `+` : "A+B"<br>
-`xor`/`^` : "A^B", "A xor (not B)"<br>
+`not` / `!` : "!A"<br>
+`and` / `.` : "A.B" ("AB" does not work)<br>
+`or` / `+` : "A+B"<br>
+`xor` / `^` : "A^B", "A xor (not B)"<br>
 `nor` : "(A)nor(B)"<br>
 `nand` : (A)nand(B)"<br>
 
